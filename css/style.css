@@ -3,7 +3,7 @@ body {
     padding: 0;
     width: 300px;
     /*height: 300px;*/
-    background: #FFFFFF;
+    background:url("../images/back.png") no-repeat right 0px bottom 0px;
     font: 14px/21px "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
 }
 

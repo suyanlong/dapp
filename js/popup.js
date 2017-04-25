@@ -21,7 +21,6 @@ $(function () {
 function callbackServer(data) {
     console.log("-------------" + data);
     var objdata = JSON.parse(data);
-    // document.getElementById(registerId).nodeValue = objdata[registerId];
     $("#registerId").text(objdata.registerId);
     $("#ownId").text(objdata.ownId);
     $("#firsAddress").text(objdata.firsAddress);

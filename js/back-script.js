@@ -33,21 +33,25 @@ function sendTobefore(obj) {
 
 }
 
+//图标不要超过128px * 128px
 function setIcon(status) {
+
     var icon = "";
     if (status == 0) {
-        icon = "0.png";
+        icon = "../images/sucess.png";
 
     } else if (status == 1) {
-        icon = "1.png";
+        icon = "../images/error.png";
 
     } else if (status == 2) {
-        icon = "3.png";
+        icon = "../images/waing.png";
     } else {
         //default
-        icon = "default.png";
+        icon = "../images/default.png";
     }
-    chrome.browserAction.setIcon({path: './img/' + icon});
+    console.log(icon);
+    // chrome.browserAction.setIcon({path: '../images/'+(status?'icon19.png':'offline.png')});
+    chrome.browserAction.setIcon({path: icon});
 }
 
 function storageReturnInfo(data) {
@@ -62,7 +66,7 @@ function storageReturnInfo(data) {
     querylocateUrl.set(local.url, local);
 }
 
-function queryUrlInfo(url) {
+function queryUrlInfo(serverUrl) {
     $.get(serverUrl, function (data, status, xhr) {
         console.log(data);// server return data;
         switch (status) {
@@ -70,7 +74,8 @@ function queryUrlInfo(url) {
                 console.log("ajax request completed!");
                 // data[""] 模拟数据
                 // data = '{"registerId": "浙B2-20080224-1", "url": "www.baidu.com", "checkTime": "2017-04-25", "firsAddress": "www.baidu.com", "status": "通过", "ownId": "浙B2-20080224"}';
-                storageReturnInfo(data);
+                setIcon(0);
+                // storageReturnInfo(data);
                 break;
             }
             case "notmodified": {
@@ -114,11 +119,9 @@ function callback(details) {
 
         }
     }
-
     //TODO
     var status = 0;
     setIcon(status);
-
 }
 
 (function () {
@@ -137,6 +140,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     console.log(message);
     console.log(sender);
     var data = '{"registerId": "浙B2-20080224-1", "url": "www.baidu.com", "checkTime": "2017-04-25", "firsAddress": "www.baidu.com", "status": "通过", "ownId": "浙B2-20080224"}';
+    //TODO
     sendResponse(data);
     // }
 });

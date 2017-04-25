@@ -3,25 +3,22 @@
   "name": "基于区块链的备案信息公示系统",
   "version": "1.0",
   "description": "基于区块链的备案信息公示系统",
+  "icons": {
+    "512": "images/512.png"
+  },
+  "web_accessible_resources": [
+    "images/*.png"
+  ],
   "browser_action": {
-    "default_icon":"img/poolleaf.png",
+    "default_icon": {
+      "128": "images/defalut.png"
+    },
     "default_popup": "popup.html",
     // 标题
     "default_title": "基于区块链的备案信息公示系统"
   },
-  //  "icons": {
-  //    "16": "images/icon16.png",
-  //    "48": "images/icon48.png",
-  //    "128": "images/icon128.png"
-  //  },
-  //  "browser_action": {
-  //    "default_icon": {
-  //      "19": "images/icon19.png",
-  //      "38": "images/icon38.png"
-  //    }
-  //  },
   "background": {
-//    "persistent": false,//不能与webRequest API接口同时存在。
+    //    "persistent": false,//不能与webRequest API接口同时存在。
     "scripts": [
       "js/jquery-3.0.0.js",
       "js/back-script.js"
@@ -34,8 +31,6 @@
     "webRequest"
   ]
 }
-
-
 
 //{
 //use debug
