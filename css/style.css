@@ -1,40 +1,65 @@
-body{
+body {
     margin: 0;
     padding: 0;
     width: 300px;
     /*height: 300px;*/
+    background: #FFFFFF;
+    font: 14px/21px "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
 }
 
-h3{
+h3 {
     text-align: center;
+    color: #FF5C5C;
 }
-.main-info{
+
+.main-info {
     /*text-align: left;*/
     /*margin-left:20px;*/
 }
 
-label{
-    display: inline-block;
-    margin: 10px 0px;
+.main-info ul{
+    margin: 0px;
+    padding: 10px 10px;
 }
 
-.left-info{
-    width: auto;
-    height: 30px;
+
+.main-info li{
+    list-style-type: none;
+    border-bottom: 1px solid #eee;
+    margin: 0px 25px;
+    margin-bottom: 20px;
 }
 
-.right-info{
-    width: auto;
-    height: 30px;
+.main-info  li:first-child, .main-info  li:last-child {
+    border-bottom: 1px solid #aaa;
 }
 
-.left-block{
-    width: 120px;
+.main-info label {
     display: inline-block;
-    text-align: right;
+    margin: 0px 0px;
+    display: inline-block;
+
+    /*padding: 12px;*/
 }
-.right-block{
-    display: inline-block;
-    text-align: left;
+
+.left-info {
+    width: 80px;
+    /*height: 30px;*/
+}
+
+.right-info {
     width: auto;
+    /*height: 30px;*/
 }
+
+/*.left-block {*/
+    /*width: 120px;*/
+    /*display: inline-block;*/
+    /*text-align: right;*/
+/*}*/
+
+/*.right-block {*/
+    /*display: inline-block;*/
+    /*text-align: left;*/
+    /*width: auto;*/
+/*}*/
