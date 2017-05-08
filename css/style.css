@@ -3,7 +3,8 @@ body {
     padding: 0;
     width: 300px;
     /*height: 300px;*/
-    background:url("../images/back.png") no-repeat right 0px bottom 0px;
+    /*background:url("../images/123.png") no-repeat;*/
+    /*background-size:100% 100%;*/
     font: 14px/21px "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
 }
 
@@ -15,6 +16,7 @@ h3 {
 .main-info {
     /*text-align: left;*/
     /*margin-left:20px;*/
+    background:url("../images/back.png") no-repeat right 0px bottom 0px;
 }
 
 .main-info ul{

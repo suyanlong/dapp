@@ -12,22 +12,24 @@ serverUrl.set("http://cn.bing.com/", "http://cn.bing.com/");
 var querylocateUrl = new Map();
 
 function CreateLocateUrl() {
-    this.registerId = "";//网站备案/许可证号
-    this.ownId = "";//主办单位编号
-    this.status = "";//状态0,1,2
-    this.url = "";//域名
+    this.registerId = ""; //网站备案/许可证号
+    this.ownId = ""; //主办单位编号
+    this.status = ""; //状态0,1,2
+    this.url = ""; //域名
     // this.urlName = "";
     // this.urlOwn = "";
-    this.firsAddress = "";//首页地址
-    this.checkTime = "";//审核时间。
+    this.firsAddress = ""; //首页地址
+    this.checkTime = ""; //审核时间。
 }
 
+function NodeInfo(query, ip) {
+    this.queryUrl = query;
+    this.ip = ip;
+}
 
-var nodeInfo = {
-    queryUrl: "",//query url
-    ip: "127.0.0.1"
-};
-
+var nodeInfo = new NodeInfo("http://127.0.0.1:1377", "127.0.0.1");
+var nodeMapInfo = new Map();
+nodeMapInfo.set("127.0.0.1", nodeInfo);
 
 function sendTobefore(obj) {
 
@@ -51,7 +53,9 @@ function setIcon(status) {
     }
     console.log(icon);
     // chrome.browserAction.setIcon({path: '../images/'+(status?'icon19.png':'offline.png')});
-    chrome.browserAction.setIcon({path: icon});
+    chrome.browserAction.setIcon({
+        path: icon
+    });
 }
 
 function storageReturnInfo(data) {
@@ -67,35 +71,49 @@ function storageReturnInfo(data) {
 }
 
 function queryUrlInfo(serverUrl) {
-    $.get(serverUrl, function (data, status, xhr) {
-        console.log(data);// server return data;
+    if (nodeMapInfo.has(serverUrl)) {
+        return;
+    }
+    var url = "http://127.0.0.1:1337";
+    var data = '{"jsonrpc":"2.0","method":"getInfo","params":[' + serverUrl + '],"id":1}';
+    // var data = '{"jsonrpc":"2.0","method":"cita_blockHeight","params":[],"id":2}';
+    //TODO 向四个节点发数据。
+
+    $.post(url, data, function (data, status, xhr) {
+        console.log(data); // server return data;
         switch (status) {
-            case "success": {
-                console.log("ajax request completed!");
-                // data[""] 模拟数据
-                // data = '{"registerId": "浙B2-20080224-1", "url": "www.baidu.com", "checkTime": "2017-04-25", "firsAddress": "www.baidu.com", "status": "通过", "ownId": "浙B2-20080224"}';
-                setIcon(0);
-                // storageReturnInfo(data);
-                break;
-            }
-            case "notmodified": {
-                break;
-            }
-            case "error": {
-                console.log("error");
-                break;
-            }
-            case "timeout": {
-                console.log("timeout");
-                break;
-            }
-            case "parsererror": {
-                console.log("parsererror");
-                break;
-            }
-            default: {
-                console.log("other error!");
-            }
+            case "success":
+                {
+                    console.log("ajax request completed!");
+                    // data[""] 模拟数据
+                    // data = '{"registerId": "浙B2-20080224-1", "url": "www.baidu.com", "checkTime": "2017-04-25", "firsAddress": "www.baidu.com", "status": "通过", "ownId": "浙B2-20080224"}';
+                    setIcon(0);
+                    // storageReturnInfo(data);
+                    break;
+                }
+            case "notmodified":
+                {
+                    break;
+                }
+            case "error":
+                {
+                    console.log("error");
+                    break;
+                }
+            case "timeout":
+                {
+                    console.log("timeout");
+                    break;
+                }
+            case "parsererror":
+                {
+                    console.log("parsererror");
+                    break;
+                }
+            default:
+                {
+                    console.log("other error!");
+                }
         }
     });
 }
@@ -126,11 +144,9 @@ function callback(details) {
 
 (function () {
     chrome.webRequest.onBeforeRequest.addListener(
-        callback,
-        {
+        callback, {
             urls: ["*://*/"]
-        },
-        ["blocking"]
+        }, ["blocking"]
     );
 })();
 
@@ -144,4 +160,3 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     sendResponse(data);
     // }
 });
-

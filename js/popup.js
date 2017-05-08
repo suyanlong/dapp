@@ -8,14 +8,16 @@
 //3、后台页面与popup页面要双向交互，才行。
 
 $(function () {
-        //得到当前活动页面的url
-        chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-            console.log(tabs[0]);
-            console.log(domainURI(tabs[0].url));
-            chrome.runtime.sendMessage(tabs[0].url, callbackServer);
-        })
-    }
-);
+    //得到当前活动页面的url
+    chrome.tabs.query({
+        currentWindow: true,
+        active: true
+    }, function (tabs) {
+        console.log(tabs[0]);
+        console.log(domainURI(tabs[0].url));
+        chrome.runtime.sendMessage(tabs[0].url, callbackServer);
+    })
+});
 
 //TODO
 function callbackServer(data) {
