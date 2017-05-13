@@ -20,6 +20,8 @@
   "background": {
     //    "persistent": false,//不能与webRequest API接口同时存在。
     "scripts": [
+      "js/web3.js",
+      "js/ethereumjs-all.js",
       "js/jquery-3.0.0.js",
       "js/back-script.js"
     ]
