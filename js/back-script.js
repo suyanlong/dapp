@@ -17,8 +17,8 @@
 var serverUrl = new Map();
 serverUrl.set("http://cn.bing.com/", "http://cn.bing.com/");
 
-var abi = EthJS.ABI;
-var BufferEX = EthJS.Buffer;
+// var abi = EthJS.ABI;
+// var BufferEX = EthJS.Buffer;
 
 var Web3 = require('web3'); //自己实现的关键字.其实就是函数.
 var web3 = new Web3();
@@ -26,13 +26,29 @@ web3.setProvider(new web3.providers.HttpProvider("http://192.168.3.109:8540"));
 var version = web3.version.api;
 console.log(version); // "0.2.0"
 
+function CreatTabStatus(tabId, status) {
+    this.id = id;
+    this.status = status;
+}
 
+var mapTablStatus = new Map();
+
+/**
+ * 0,1,2,3,
+ * @type {boolean}
+ */
+var tabStatus = 0;
+var curTabid;
 var abi = [{"constant":false,"inputs":[{"name":"num","type":"bytes32"},{"name":"name","type":"string"},{"name":"property","type":"string"},{"name":"principle","type":"string"}],"name":"upload_org","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"num","type":"bytes32"}],"name":"get_org","outputs":[{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"org","outputs":[{"name":"num","type":"bytes32"},{"name":"name","type":"string"},{"name":"property","type":"string"},{"name":"principle","type":"string"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"num","type":"bytes32"}],"name":"Upload_org","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"num","type":"bytes32"}],"name":"Get_org","type":"event"}];
 
+function domainURI(str) {
+    var durl = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
+    domain = str.match(durl);
+    return domain[0];
+}
 
 // 网站备案/许可证号，主办单位编号，状态（通过、关停、过期），域名，网站名称，首页地址，审核时间。
 var querylocateUrl = new Map();
-
 function CreateLocateUrl() {
     this.registerId = ""; //网站备案/许可证号
     this.ownId = ""; //主办单位编号
@@ -72,8 +88,8 @@ function setIcon(status) {
     } else if (status == 2) {
         icon = "../images/waing.png";
     } else {
-        //default
-        icon = "../images/default.png";
+        //default -1
+        icon = "../images/defalut.png";
     }
     console.log(icon);
     // chrome.browserAction.setIcon({path: '../images/'+(status?'icon19.png':'offline.png')});
@@ -98,7 +114,6 @@ function queryUrlInfo(serverUrl) {
     if (nodeMapInfo.has(serverUrl)) {
         return;
     }
-
     // var url = "http://192.168.3.109:8540";
     // var data = '{"jsonrpc":"2.0","method":"getInfo","params":["' + serverUrl + '"],"id":1}';
     // var data = '{"jsonrpc":"2.0","method":"cita_blockHeight","params":[],"id":2}';
@@ -109,7 +124,6 @@ function queryUrlInfo(serverUrl) {
     // var data = '{"method":"eth_call","params":[{ "to": "0xafbA601690B87C0f2f5296af4860A4E56d32F3C9","data": "0x7aa66e11000000000000000000000000000000000000000000000000000000000000007b"}],"id":1,"jsonrpc":"2.0"}';
     // var data = '{"method":"eth_call","params":[{ "to": "0x8C602c7997ECE23A5e16c6a2e26b549106D9b717","data": "0x' + param + '"}],"id":1,"jsonrpc":"2.0"}';
     // console.log(data);
-
     // $.post(url, data, function (serv_data, status, xhr) {
     //     console.log(serv_data); // server return data;
     //     switch (status) {
@@ -147,7 +161,6 @@ function queryUrlInfo(serverUrl) {
     //             }
     //     }
     // },"application/json");
-
     // $.ajax(
     //     {
     //         url: url,
@@ -180,29 +193,49 @@ function queryUrlInfo(serverUrl) {
     //         }
     //     }
     // );
-
-
     // $(document).ajaxError(function(event,xhr,options,exc){
     //     console.log(arguments);
     // });
-
 
 
     // creation of contract object
     var MyContract = web3.eth.contract(abi);
 
 // initiate contract for an address
-    var myContractInstance = MyContract.at('0x3E0daEc7B626Bf173216Ad18Eaf2E349C1527Ce2');
+    var myContractInstance = MyContract.at('0x1ffB8accd6d248f36bD2Fa56821C76b42dEF7B5D');
 
 // call constant function
-    var result = myContractInstance.get_org.call('123');
-    console.log(result) // '0x25434534534'
-
-
+    var str = web3.toHex("0x01");
+    var result = myContractInstance.get_org.call(str);
+    console.log(result); // '0x25434534534'
+    // TODO
+    successBack(result);
 
 }
 
-function callback(details) {
+/**
+ * //成功返回数据
+ */
+function successBack(data) {
+
+    //默认 通过、关停、过期 => -1 0 1 2
+    var status = 1;
+    mapTablStatus.set(curTabid, status);
+    // chrome.tabs.getCurrent(function(tab){
+    //     console.log(arguments);
+    // });
+    // chrome.tabs.query({
+    //     currentWindow: true,
+    //     active: true
+    // }, function (tabs) {
+    //     //保存当前页面的状态
+    //     mapTablStatus.set(tabs[0],new CreatTabStatus(tabs[0],status,domainURI(tabs[0].url)));
+    // });
+
+}
+
+function preCallback(details) {
+
     console.log("-------------------------");
     console.log(details);
     if (querylocateUrl.has(details.url)) {
@@ -222,13 +255,11 @@ function callback(details) {
         }
     }
     //TODO
-    var status = 0;
-    setIcon(status);
 }
 
 (function () {
     chrome.webRequest.onBeforeRequest.addListener(
-        callback, {
+        preCallback, {
             urls: ["*://*/"]
         }, ["blocking"]
     );
@@ -245,4 +276,35 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     // }
 });
 
-// ABI.methodID();
+
+/**
+ * 标签页更新时的事件
+ */
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    ChangesIcodeTabStatus(tabId);
+});
+
+/**
+ * 注册新切换标签页与切换已有标签时的事件
+ *
+ */
+chrome.tabs.onSelectionChanged.addListener(function (tabId, selectInfo, tab) {
+    curTabid = tabId;
+    // mapTablStatus.set(tabs[0],new CreatTabStatus(tabs[0],status,domainURI(tabs[0].url)));
+    ChangesIcodeTabStatus(tabId);
+
+});
+
+chrome.tabs.onRemoved.addListener(function (tabid, windwos) {
+    console.log(arguments);
+    mapTablStatus.remove(tabId);
+});
+
+function ChangesIcodeTabStatus(tabId) {
+    if (mapTablStatus.get(tabId)) {
+        setIcon(mapTablStatus.get(tabId));
+    } else {
+
+    }
+}
+

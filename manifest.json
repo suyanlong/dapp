@@ -31,7 +31,8 @@
     "*://*/*",
     "webRequestBlocking",
     "webRequest"
-  ]
+  ],
+  "options_page": "option.html"
 }
 
 //{

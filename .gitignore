@@ -3,3 +3,6 @@
 html/
 libs/
 locales/
+将删除 .idea/dapp_chrome.iml
+将删除 js/json_contract.py
+将删除 package.json

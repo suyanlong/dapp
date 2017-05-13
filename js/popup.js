@@ -16,7 +16,7 @@ $(function () {
         console.log(tabs[0]);
         console.log(domainURI(tabs[0].url));
         chrome.runtime.sendMessage(tabs[0].url, callbackServer);
-    })
+    });
 });
 
 //TODO
