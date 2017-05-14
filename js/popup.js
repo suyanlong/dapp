@@ -22,13 +22,26 @@ $(function () {
 //TODO
 function callbackServer(data) {
     console.log("-------------" + data);
-    var objdata = JSON.parse(data);
-    $("#registerId").text(objdata.registerId);
-    $("#ownId").text(objdata.ownId);
-    $("#firsAddress").text(objdata.firsAddress);
-    $("#checkTime").text(objdata.checkTime);
-    $("#url").text(objdata.url);
-    $("#status").text(objdata.status);
+    // // var objdata = JSON.parse(data);
+    // $("#registerId").text(objdata.registerId);
+    // $("#ownId").text(objdata.ownId);
+    // $("#firsAddress").text(objdata.firsAddress);
+    // $("#checkTime").text(objdata.checkTime);
+    // $("#url").text(objdata.url);
+    // $("#status").text(objdata.status);
+    //
+    $("#url").text(data.url);
+    $("#checkTime").text(data.checkTime);
+    $("#urlName").text(data.urlName);
+    $("#firsAddress").text(data.firsAddress);
+    $("#ownId").text(data.ownId);
+    $("#registerId").text(data.registerId);
+    // if(data[7] == 1){
+    //
+    // }else{
+    //
+    // }
+    $("#status").text(data.status);
 }
 
 function domainURI(str) {
